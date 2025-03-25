@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { ArrowBack, ChevronLeft, ChevronRight, Settings, Notifications } from '@mui/icons-material';
+import { ArrowBack, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import './Calendar.css';
 
 const Calendar = () => {
@@ -74,20 +74,14 @@ const Calendar = () => {
   };
 
   return (
+    <div className="kere">
+
     <div className="calendar-page">
       <header>
         <button className="back-button" onClick={() => navigate(-1)}>
           <ArrowBack />
         </button>
         <h1>Kalendar</h1>
-        <div className="header-actions">
-          <button className="icon-button">
-            <Settings />
-          </button>
-          <button className="icon-button">
-            <Notifications />
-          </button>
-        </div>
       </header>
 
       <div className="month-selector">
@@ -105,7 +99,7 @@ const Calendar = () => {
       </div>
 
       <section className="total-amount-section">
-        <h1 className="total-amount-label">Oylik jami:</h1>
+        <p className="total-amount-label">Oylik jami:</p>
         <p className="total-amount-2">{totalAmount} so'm</p>
       </section>
 
@@ -136,6 +130,7 @@ const Calendar = () => {
           ))}
         </div>
       </section>
+    </div>
     </div>
   );
 };
