@@ -92,7 +92,7 @@ const Login = () => {
               <img src="./user-login.png" alt="" className="input-icon" />
               <input
                 type="text"
-                placeholder="Login"
+                placeholder="admin"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={isBlocked}
@@ -105,7 +105,7 @@ const Login = () => {
               <img src="./qulf.png" alt="" className="input-icon" />
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Parol"
+                placeholder="12345"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isBlocked}
