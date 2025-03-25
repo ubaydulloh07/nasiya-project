@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.MuiContainer-root {
+  min-height: 100vh;
+}
+
+.MuiPaper-root {
+  background-color: white;
+  border-radius: 8px !important;
+}
+
+@media (min-width: 600px) {
+  .MuiContainer-root {
+    padding: 0 32px;
+  }
+}
+
+@media (max-width: 599px) {
+  .MuiPaper-root {
+    box-shadow: none !important;
+    padding: 16px !important;
+  }
+}
+
+h1 {
+  font-size: 2.5em;
+  line-height: 1.1;
+}
