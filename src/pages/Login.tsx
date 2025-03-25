@@ -1,50 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Container, Paper, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Login.css';
 
-const MAX_ATTEMPTS = 3;
-const BLOCK_DURATION = 60 * 1000; // 1 minute in milliseconds
-
-// Default credentials
+// Default login credentials
 const DEFAULT_USERNAME = "admin";
 const DEFAULT_PASSWORD = "12345";
+const MAX_ATTEMPTS = 3;
+const BLOCK_DURATION = 30000; // 30 seconds in milliseconds
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [isBlocked, setIsBlocked] = useState(false);
   const [blockEndTime, setBlockEndTime] = useState<number | null>(null);
-  const [timeLeft, setTimeLeft] = useState<string>('');
-
-  useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/dashboard');
-    }
-
-    // Check if user is blocked from localStorage
-    const storedBlockEndTime = localStorage.getItem('blockEndTime');
-    if (storedBlockEndTime) {
-      const endTime = parseInt(storedBlockEndTime);
-      if (endTime > Date.now()) {
-        setIsBlocked(true);
-        setBlockEndTime(endTime);
-      } else {
-        localStorage.removeItem('blockEndTime');
-        localStorage.removeItem('loginAttempts');
-      }
-    }
-
-    // Get stored attempts
-    const storedAttempts = localStorage.getItem('loginAttempts');
-    if (storedAttempts) {
-      setAttempts(parseInt(storedAttempts));
-    }
-  }, [navigate]);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [showError, setShowError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (isBlocked && blockEndTime) {
@@ -53,13 +26,11 @@ const Login = () => {
         if (now >= blockEndTime) {
           setIsBlocked(false);
           setBlockEndTime(null);
-          localStorage.removeItem('blockEndTime');
-          localStorage.removeItem('loginAttempts');
           setAttempts(0);
+          setShowError(false);
           clearInterval(timer);
         } else {
-          const seconds = Math.ceil((blockEndTime - now) / 1000);
-          setTimeLeft(`${seconds} soniya`);
+          setTimeLeft(Math.ceil((blockEndTime - now) / 1000));
         }
       }, 1000);
 
@@ -67,122 +38,102 @@ const Login = () => {
     }
   }, [isBlocked, blockEndTime]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     
-    if (isBlocked) {
-      return;
-    }
+    if (isBlocked) return;
 
-    // Check against default credentials
     if (username === DEFAULT_USERNAME && password === DEFAULT_PASSWORD) {
-      localStorage.setItem('token', 'mock-token-12345');
-      localStorage.removeItem('loginAttempts');
+      // Successful login
+      setAttempts(0);
+      setShowError(false);
       navigate('/dashboard');
     } else {
+      // Failed login
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
-      localStorage.setItem('loginAttempts', newAttempts.toString());
+      setShowError(true);
 
       if (newAttempts >= MAX_ATTEMPTS) {
-        const endTime = Date.now() + BLOCK_DURATION;
         setIsBlocked(true);
-        setBlockEndTime(endTime);
-        localStorage.setItem('blockEndTime', endTime.toString());
-        setError('Kirish vaqtincha bloklandi. Iltimos, keyinroq qayta urinib ko\'ring.');
-      } else {
-        setError(`Login yoki parol xato. Qolgan urinishlar soni: ${MAX_ATTEMPTS - newAttempts}`);
+        setBlockEndTime(Date.now() + BLOCK_DURATION);
       }
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Paper elevation={3} sx={{ width: '100%', p: 4 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
-            Dasturga kirish
-          </Typography>
-          {isBlocked ? (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-              <Typography variant="body1">
-                Ko'p marta noto'g'ri urinish.
-              </Typography>
-              <Typography variant="body2">
-                Iltimos, {timeLeft} kutib turing
-              </Typography>
-            </Alert>
-          ) : (
-            <>
-              {error && (
-                <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
-                  {error}
-                </Alert>
-              )}
-              <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Login"
-                  name="username"
-                  autoComplete="username"
-                  autoFocus
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  sx={{ mb: 3 }}
-                  disabled={isBlocked}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Parol"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  sx={{ mb: 4 }}
-                  disabled={isBlocked}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  disabled={isBlocked}
-                  sx={{ 
-                    mt: 2, 
-                    mb: 3,
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    backgroundColor: '#1976d2',
-                    '&:hover': {
-                      backgroundColor: '#1565c0'
-                    }
-                  }}
-                >
-                  Kirish
-                </Button>
-                <Typography variant="body1" color="text.secondary" align="center">
-                  Dasturga kirish huquqiga ega bo'lish uchun administrator bilan bog'laning
-                </Typography>
-              </Box>
-            </>
-          )}
-        </Box>
-      </Paper>
-    </Container>
+    <div className="login-page">
+      <div className="login-container">
+        <img src="/logo.png" alt="Logo" className="logo" />
+        
+        <h1>Dasturga kirish</h1>
+        <p className="subtitle">Iltimos, tizimga kirish uchun login va parolingizni kiriting.</p>
+
+        {showError && !isBlocked && (
+          <div className="error-message">
+            <p>Login yoki parol xato. Qolgan urinishlar soni: {MAX_ATTEMPTS - attempts}</p>
+          </div>
+        )}
+
+        {isBlocked && (
+          <div className="block-message">
+            <p>Juda ko'p marta noto'g'ri urinish.</p>
+            <p>Iltimos, {timeLeft} soniya kuting</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <div className="input-wrapper">
+              <img src="./user-login.png" alt="" className="input-icon" />
+              <input
+                type="text"
+                placeholder="Login"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={isBlocked}
+              />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <div className="input-wrapper">
+              <img src="./qulf.png" alt="" className="input-icon" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Parol"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isBlocked}
+              />
+              <button 
+                type="button" 
+                className="show-password"
+                onClick={togglePasswordVisibility}
+              >
+                <img src="./Hide.png" alt="Show password" />
+              </button>
+            </div>
+          </div>
+
+          <Link to="/forgot-password" className="forgot-password">
+            Parolni unutdingizmi?
+          </Link>
+
+          <button type="submit" className="login-button" disabled={isBlocked}>
+            Kirish
+          </button>
+        </form>
+
+        <p className="register-text">
+          Hisobingiz yo'q bo'lsa, tizimga kirish huquqini olish uchun <span className="register-link">do'kon administratori</span> bilan bog'laning.
+        </p>
+      </div>
+    </div>
   );
 };
 

@@ -1,0 +1,179 @@
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center !important;
+  justify-content: center;
+  padding: 30px;
+  background-color: rgba(123, 123, 123, 0.766);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 15px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 20px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 32px 0;
+}
+
+.error-message,
+.block-message {
+  width: 100%;
+  background-color: #fff3f3;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.error-message p,
+.block-message p {
+  color: #d32f2f;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.block-message {
+  background-color: #fff3f3;
+}
+
+.block-message p:first-child {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+form {
+  width: 100%;
+}
+
+.input-group {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  padding: 0 16px;
+}
+
+.input-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  opacity: 0.5;
+}
+
+input {
+  width: 100%;
+  height: 48px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #333;
+  padding: 0;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+input:focus {
+  outline: none;
+}
+
+input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.show-password {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.show-password img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+}
+
+.forgot-password {
+  display: block;
+  text-align: right;
+  color: #2196f3;
+  text-decoration: none;
+  font-size: 14px;
+  margin: -8px 0 24px 0;
+}
+
+.login-button {
+  width: 100%;
+  height: 48px;
+  background-color: #2196f3;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #1976d2;
+}
+
+.login-button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.register-text {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.register-link {
+  color: #2196f3;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
