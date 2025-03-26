@@ -36,7 +36,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <div className="container">
         <div className="content">
-          {/* Header */}
+          
           <header className="header">
             <div className="user-info">
               <img src="./user.png" alt="User avatar" className="avatar" />
@@ -47,7 +47,7 @@ const Dashboard = () => {
             </div>
           </header>
 
-          {/* Total Amount Card */}
+  
           <div className="card total-amount">
             <span className="label">Umumiy nasiya:</span>
             <div className="amount-row">
@@ -62,7 +62,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Statistics */}
+        
           <div className="stats-grid">
             <div className="stat-card">
               <span className="stat-label">Kechiktirilgan to'lovlar</span>
@@ -74,8 +74,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Wallet Section */}
-          <section className="wallet-section">
+                <section className="wallet-section">
             <h2 className="section-title">Hamyoningiz</h2>
             <div className="wallet-card">
               <div className="wallet-info">
@@ -98,7 +97,7 @@ const Dashboard = () => {
             </div>
           </section>
 
-          {/* Bottom Navigation */}
+         
           <nav className="bottom-nav">
             <div className="nav-content">
               <IconButton className="nav-button active">

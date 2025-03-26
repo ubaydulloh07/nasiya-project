@@ -6,7 +6,7 @@ import './Login.css';
 const DEFAULT_USERNAME = "admin";
 const DEFAULT_PASSWORD = "12345";
 const MAX_ATTEMPTS = 3;
-const BLOCK_DURATION = 30000; // 30 seconds in milliseconds
+const BLOCK_DURATION = 30000;
 
 const Login = () => {
   const navigate = useNavigate();
@@ -44,12 +44,12 @@ const Login = () => {
     if (isBlocked) return;
 
     if (username === DEFAULT_USERNAME && password === DEFAULT_PASSWORD) {
-      // Successful login
+    
       setAttempts(0);
       setShowError(false);
       navigate('/dashboard');
     } else {
-      // Failed login
+    
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       setShowError(true);

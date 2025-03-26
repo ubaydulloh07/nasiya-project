@@ -8,7 +8,7 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   
-  // Mock data
+  
   const totalAmount = "50 125 000";
   const payments = [
     { id: 1, name: "Avazbek Jahongirov", amount: "UZS 1 000 000" },
@@ -33,12 +33,10 @@ const Calendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
     
-    // Add empty days for the start of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} className="day empty"></div>);
     }
 
-    // Add the days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const isWeekend = (day + firstDay) % 7 === 0 || (day + firstDay) % 7 === 1;
       const isToday = day === 1;

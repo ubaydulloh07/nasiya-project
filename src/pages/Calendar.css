@@ -21,7 +21,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* User info styles */
 .user-info {
   display: flex;
   align-items: center;
@@ -63,7 +62,6 @@
   color: #666;
 }
 
-/* Total amount card styles */
 .total-amount-card {
   background-color: #4caf50;
   border-radius: 16px;
@@ -86,7 +84,6 @@
   margin: 0;
 }
 
-/* Stats grid styles */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -121,7 +118,6 @@
   color: #2196f3;
 }
 
-/* Wallet section styles */
 .wallet-section {
   margin-bottom: 20px;
 }
@@ -206,8 +202,6 @@
 .status-paid {
   color: #4caf50;
 }
-
-/* Bottom navigation styles */
 .bottom-nav {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -243,7 +237,6 @@
   opacity: 1;
 }
 
-/* Header styles */
 header {
   display: flex;
   align-items: center;
@@ -284,7 +277,6 @@ header h1 {
   color: #333;
 }
 
-/* Month selector styles */
 .month-selector {
   display: flex;
   justify-content: space-between;
@@ -315,7 +307,6 @@ header h1 {
   justify-content: center;
 }
 
-/* Total amount section */
 .total-amount-section {
   display: flex;
   justify-content: space-between;
@@ -336,7 +327,6 @@ header h1 {
   margin: 0;
 }
 
-/* Calendar grid styles */
 .calendar-grid {
   margin-bottom: 20px;
 }
@@ -413,7 +403,6 @@ header h1 {
   background-color: white;
 }
 
-/* Summary section styles */
 .summary-section {
   padding: 12px;
   background-color: #f5f5f5;
