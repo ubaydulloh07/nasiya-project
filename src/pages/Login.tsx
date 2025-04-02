@@ -8,8 +8,8 @@ const BLOCK_DURATION = 30000;
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('smart');
+  const [password, setPassword] = useState('ubaydulloh11');
   const [attempts, setAttempts] = useState(0);
   const [isBlocked, setIsBlocked] = useState(false);
   const [blockEndTime, setBlockEndTime] = useState<number | null>(null);
@@ -18,6 +18,14 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
 
   useEffect(() => {
     if (isBlocked && blockEndTime) {
@@ -48,6 +56,18 @@ const Login = () => {
     setErrorMessage('');
 
     try {
+      // For testing/development - hardcoded login
+      if (username === 'smart' && password === 'ubaydulloh11') {
+        // Mock successful login
+        localStorage.setItem('authToken', 'mock-token-123');
+        localStorage.setItem('userData', JSON.stringify({ name: 'Test User', role: 'admin' }));
+        setAttempts(0);
+        setShowError(false);
+        navigate('/dashboard');
+        return;
+      }
+
+      // Real API call
       const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {

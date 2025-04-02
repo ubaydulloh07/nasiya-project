@@ -10,35 +10,85 @@ import Sozlama from './pages/Sozlama';
 import MijozYaratish from './pages/MijozYaratish';
 import { MijozDetails } from './pages/MijozDetails';
 import { MijozBatafsil } from './pages/MijozBatafsil';
-
-const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem('token');
-  return token ? <>{children}</> : <Navigate to="/" />;
-};
+import { PrivateRoute } from './components/PrivateRoute';
 
 function App() {
-  // Check if user is authenticated
-  const isAuthenticated = localStorage.getItem('token');
-
   return (
     <Router>
       <div className="app-container">
         <Routes>
           {/* Public routes */}
-          <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
+          <Route path="/login" element={<Login />} />
           
           {/* Protected routes */}
-          <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/mijozlar" element={isAuthenticated ? <Mijoz /> : <Navigate to="/login" />} />
-          <Route path="/hisobot" element={isAuthenticated ? <Hisobot /> : <Navigate to="/login" />} />
-          <Route path="/sozlama" element={isAuthenticated ? <Sozlama /> : <Navigate to="/login" />} />
-          <Route path="/mijoz-yaratish" element={isAuthenticated ? <MijozYaratish /> : <Navigate to="/login" />} />
-          <Route path="/calendar" element={isAuthenticated ? <Calendar /> : <Navigate to="/login" />} />
-          <Route path="/mijoz/:id" element={isAuthenticated ? <MijozDetails /> : <Navigate to="/login" />} />
-          <Route path="/mijoz/:id/batafsil" element={isAuthenticated ? <MijozBatafsil /> : <Navigate to="/login" />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/mijozlar"
+            element={
+              <PrivateRoute>
+                <Mijoz />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/hisobot"
+            element={
+              <PrivateRoute>
+                <Hisobot />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/sozlama"
+            element={
+              <PrivateRoute>
+                <Sozlama />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/mijoz-yaratish"
+            element={
+              <PrivateRoute>
+                <MijozYaratish />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <PrivateRoute>
+                <Calendar />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/mijoz/:id"
+            element={
+              <PrivateRoute>
+                <MijozDetails />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/mijoz/:id/batafsil"
+            element={
+              <PrivateRoute>
+                <MijozBatafsil />
+              </PrivateRoute>
+            }
+          />
           
-          {/* Redirect any unknown routes to home */}
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* Redirect any unknown routes to login */}
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
