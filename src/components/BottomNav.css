@@ -1,0 +1,39 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #9e9e9e;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 12px;
+  min-width: 64px;
+}
+
+.nav-item.active {
+  color: #2f80ed;
+}
+
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+}
+
+.nav-item span {
+  font-size: 12px;
+  font-weight: 500;
+}

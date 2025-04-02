@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
-// Default login credentials
-const DEFAULT_USERNAME = "admin";
-const DEFAULT_PASSWORD = "12345";
+const API_URL = 'https://nasiya.takedaservice.uz/api';
 const MAX_ATTEMPTS = 3;
 const BLOCK_DURATION = 30000;
 
@@ -17,7 +15,9 @@ const Login = () => {
   const [blockEndTime, setBlockEndTime] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isBlocked && blockEndTime) {
@@ -38,26 +38,52 @@ const Login = () => {
     }
   }, [isBlocked, blockEndTime]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (isBlocked) return;
 
-    if (username === DEFAULT_USERNAME && password === DEFAULT_PASSWORD) {
-    
-      setAttempts(0);
-      setShowError(false);
-      navigate('/dashboard');
-    } else {
-    
+    setIsLoading(true);
+    setShowError(false);
+    setErrorMessage('');
+
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          login: username,
+          hashed_password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store the token and user data
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        setAttempts(0);
+        setShowError(false);
+        navigate('/dashboard');
+      } else {
+        throw new Error(data.message || 'Login failed');
+      }
+    } catch (error: any) {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       setShowError(true);
+      setErrorMessage(error.message || 'Login yoki parol xato');
 
       if (newAttempts >= MAX_ATTEMPTS) {
         setIsBlocked(true);
         setBlockEndTime(Date.now() + BLOCK_DURATION);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +101,8 @@ const Login = () => {
 
         {showError && !isBlocked && (
           <div className="error-message">
-            <p>Login yoki parol xato. Qolgan urinishlar soni: {MAX_ATTEMPTS - attempts}</p>
+            <p>{errorMessage}</p>
+            <p>Qolgan urinishlar soni: {MAX_ATTEMPTS - attempts}</p>
           </div>
         )}
 
@@ -92,10 +119,11 @@ const Login = () => {
               <img src="./user-login.png" alt="" className="input-icon" />
               <input
                 type="text"
-                placeholder="admin"
+                placeholder="Login"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={isBlocked}
+                required
               />
             </div>
           </div>
@@ -105,10 +133,11 @@ const Login = () => {
               <img src="./qulf.png" alt="" className="input-icon" />
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="12345"
+                placeholder="Parol"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isBlocked}
+                required
               />
               <button 
                 type="button" 
@@ -124,8 +153,12 @@ const Login = () => {
             Parolni unutdingizmi?
           </Link>
 
-          <button type="submit" className="login-button" disabled={isBlocked}>
-            Kirish
+          <button 
+            type="submit" 
+            className="login-button" 
+            disabled={isBlocked || isLoading}
+          >
+            {isLoading ? 'Kutilmoqda...' : 'Kirish'}
           </button>
         </form>
 

@@ -1,123 +1,162 @@
 import { useState } from 'react';
-import { IconButton } from '@mui/material';
-import { Visibility, VisibilityOff, Home, People, Description, Settings } from '@mui/icons-material';
-import WalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import AddIcon from '@mui/icons-material/Add';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import './Dashboard.css';
+import BottomNav from '../components/BottomNav';
 
 const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isAmountVisible, setIsAmountVisible] = useState(true);
   const navigate = useNavigate();
-  
-  const mockData = {
-    name: 'Testuchun',
-    avatar: '/avatar.jpg',
-    totalAmount: '135 214 200',
-    walletAmount: '300 000',
-    stats: {
-      delayedPayments: 26,
-      totalCustomers: 151
-    }
-  };
 
-  const toggleAmountVisibility = () => {
-    setIsAmountVisible(!isAmountVisible);
+  // const handleLogout = () => {
+  //   localStorage.removeItem('authToken');
+  //   localStorage.removeItem('userData');
+  //   navigate('/login');
+  // };
+
+  // Mock data
+  const mockData = {
+    user: {
+      name: "Rahmatulloh Madraximov",
+      avatar: "./user.png"
+    },
+    totalAmount: "50 125 000",
+    stats: {
+      kechiktirilgan: "12",
+      mijozlar: "156"
+    },
+    wallets: [
+      {
+        id: 1,
+        name: "Asosiy hamyon",
+        amount: "1 000 000",
+        currency: "UZS",
+        status: "paid"
+      },
+      {
+        id: 2,
+        name: "Qo'shimcha hamyon",
+        amount: "500 000",
+        currency: "UZS",
+        status: "pending"
+      }
+    ]
   };
 
   const formatAmount = (amount: string) => {
-    return isAmountVisible ? amount : '*'.repeat(amount.length / 2);
+    return new Intl.NumberFormat('uz-UZ').format(parseInt(amount.replace(/\s/g, '')));
   };
 
-  const handleCalendarClick = () => {
-    navigate('/calendar');
-  };
-
-  return (
-    <div className="dashboard">
-      <div className="container">
-        <div className="content">
-          
-          <header className="header">
-            <div className="user-info">
-              <img src="./user.png" alt="User avatar" className="avatar" />
-              <span className="username">{mockData.name}</span>
-            </div>
-            <div className="calendar" onClick={handleCalendarClick}>
-              <img src="./kalendar.png" alt="" />
-            </div>
-          </header>
-
-  
-          <div className="card total-amount">
-            <span className="label">Umumiy nasiya:</span>
-            <div className="amount-row">
-              <h2 className="amount">{formatAmount(mockData.totalAmount)} so'm</h2>
-              <IconButton 
-                size="small" 
-                className="visibility-icon"
-                onClick={toggleAmountVisibility}
-              >
-                {isAmountVisible ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </div>
-          </div>
-
-        
-          <div className="stats-grid">
-            <div className="stat-card">
-              <span className="stat-label">Kechiktirilgan to'lovlar</span>
-              <h3 className="stat-value error">{mockData.stats.delayedPayments}</h3>
-            </div>
-            <div className="stat-card">
-              <span className="stat-label">Mijozlar soni</span>
-              <h3 className="stat-value primary">{mockData.stats.totalCustomers}</h3>
-            </div>
-          </div>
-
-                <section className="wallet-section">
-            <h2 className="section-title">Hamyoningiz</h2>
-            <div className="wallet-card">
-              <div className="wallet-info">
-                <div className="wallet-icon-wrapper">
-                  <WalletIcon className="wallet-icon" />
-                </div>
-                <div className="wallet-balance">
-                  <span className="balance-label">Hisobingizda</span>
-                  <span className="balance-amount">{formatAmount(mockData.walletAmount)} so'm</span>
-                </div>
-              </div>
-              <IconButton className="add-button">
-                <span>+</span>
-              </IconButton>
-            </div>
-
-            <div className="payment-status">
-              <span className="status-label">Bu oy uchun to'lov:</span>
-              <span className="status-value">To'lov qilingan</span>
-            </div>
-          </section>
-
-         
-          <nav className="bottom-nav">
-            <div className="nav-content">
-              <IconButton className="nav-button active">
-                <Home />
-              </IconButton>
-              <IconButton className="nav-button">
-                <People />
-              </IconButton>
-              <IconButton className="nav-button">
-                <Description />
-              </IconButton>
-              <IconButton className="nav-button">
-                <Settings />
-              </IconButton>
-            </div>
-          </nav>
+  if (isLoading) {
+    return (
+      <div className="dashboard-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Ma'lumotlar yuklanmoqda...</p>
         </div>
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <div className="error-container">
+          <div className="error-message">{error}</div>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="retry-button"
+            disabled={isLoading}
+          >
+            Qayta urinish
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="dashboard-container">
+      {/* Header */}
+      <div className="dashboard-header">
+        <div className="user-profile">
+          <img src='./user.png' alt="Profile" className="profile-image" />
+          <span>{mockData.user.name}</span>
+        </div>
+
+        <div className="calendar-icon" onClick={() => navigate('/calendar')}>
+          <CalendarTodayOutlinedIcon />
+        </div>
+      </div>
+
+      {/* Total Amount Card */}
+      <div className="total-amount-card">
+        <div className="pul">
+          {formatAmount(mockData.totalAmount)} so'm
+        </div>
+        <div className="subtitle">Umumiy nasiya:</div>
+        <div 
+          className="visibility-icon"
+          onClick={() => setIsAmountVisible(!isAmountVisible)}
+        >
+          {isAmountVisible ? 
+            <VisibilityOutlinedIcon /> : 
+            <VisibilityOffOutlinedIcon />
+          }
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="stats-section">
+        <div className="stat-item">
+          <div className="stat-label">Kechiktirilgan to'lovlar</div>
+          <div className="stat-value red">{mockData.stats.kechiktirilgan}</div>
+        </div>
+        <div className="stat-item">
+          <div className="stat-label">Mijozlar soni</div>
+          <div className="stat-value green">{mockData.stats.mijozlar}</div>
+        </div>
+      </div>
+
+      {/* Wallet Section */}
+      <h2 className="wallet-title">Hamyoningiz</h2>
+      <div className="wallet-section">
+        {mockData.wallets.map(wallet => (
+          <div key={wallet.id} className="wallet-card">
+            <div className="wallet-info">
+              <div className="wallet-icon">
+                <AccountBalanceWalletOutlinedIcon />
+              </div>
+              <div className="wallet-details">
+                <p className="wallet-label">{wallet.name}</p>
+                <p className="wallet-amount">{formatAmount(wallet.amount)} {wallet.currency}</p>
+              </div>
+            </div>
+            <div className="payment-status">
+              <p className={`status-${wallet.status}`}>
+                {wallet.status === 'paid' ? 'Tolandi' : 'Kutilmoqda'}
+              </p>
+              <button className="add-button">
+                <AddIcon />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom Navigation */}
+     
+     <BottomNav />
+     
     </div>
   );
 };
 
 export default Dashboard; 
+
